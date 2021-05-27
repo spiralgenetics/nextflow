@@ -1,0 +1,7 @@
+name: conda-env-name
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - nano

@@ -1,0 +1,6 @@
+main.nf
+nextflow.config
+README.md
+data
+assets
+testdata

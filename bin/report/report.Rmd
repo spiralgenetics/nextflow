@@ -1,0 +1,35 @@
+---
+output: 
+  html_document:
+    code_download: false
+    toc: true                  # table of content true
+    toc_depth: 3               # upto three depths of headings (specified by #, ## and ###)
+    toc_float: true
+    number_sections: true      # if you want number sections at each table header
+    theme: united              # many options for theme, this one is my favorite.
+    highlight: tango           # specifies the syntax highlighting style
+    css: 'style.css'
+params:
+  res_table:  x
+title: "`r paste0('Report title' , '') `"
+author: ""
+date: ""
+---
+
+```{r include = FALSE}
+knitr::opts_chunk$set(echo=FALSE, warning=FALSE)
+```
+
+```{r echo = FALSE}
+source("DTable.R")
+suppressPackageStartupMessages({
+library(magrittr)
+library(DT)
+library(htmltools)
+library(stringr)
+library(dplyr)
+library(kableExtra)
+})
+```
+
+# About
