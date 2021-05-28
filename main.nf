@@ -30,41 +30,46 @@ if (params.help) {
 Channel
     .fromPath(params.input)
     .ifEmpty { exit 1, "Cannot find input file : ${params.input}" }
-    .splitCsv(skip:1)
-    .map {sample_name, file_path -> [ sample_name, file_path ] }
-    .set { ch_input }
+    .splitCsv(skip:1, sep:'\t')
+    .map { participant_id, participant_type, bam -> [ participant_id, participant_type, bam ] }
+    .into { ch_input; ch_input_to_view }
+
+ch_input_to_view.view()
+ch_model = Channel.value(file(params.model))
+ch_reference_tar_gz = Channel.value(file(params.reference_tar_gz))
+ch_license = Channel.value(file(params.license))
 
 // Define Process
-process step_1 {
-    tag "$sample_name"
-    label 'low_memory'
-    publishDir "${params.outdir}", mode: 'copy'
+process bgwrapper {
+    tag "$participant_id"
+    publishDir "${params.outdir}/${participant_type}", mode: 'copy'
 
     input:
-    set val(sample_name), file(input_file) from ch_input
+    set val(participant_id), val(participant_type), file(bam) from ch_input
+    each file(model) from ch_model
+    each file(reference_tar_gz) from ch_reference_tar_gz
+    each file(license) from ch_license
 
     output:
-    file "input_file_head.txt" into ch_out
+    file "mock_${participant_id}.txt" into ch_out
+    file "*.vcf"
 
     script:
     """
-    head $input_file > input_file_head.txt
+    # mkdir tmp
+    # tar xvfz $reference_tar_gz
+    # biograph full_pipeline --biograph ${participant_id}.bg --ref $reference_tar_gz.simpleName \
+    # --reads $bam \
+    # --model $model \
+    # --tmp ./tmp
+    # mv ${participant_id}.bg/analysis/results.vcf ${participant_type}_${participant_id}.vcf
+
+    ls -l
+    echo "participant_id:" $participant_id
+    echo "participant_type:" $participant_type
+    touch mock_${participant_id}.txt
+    touch mock_${participant_id}.vcf
     """
+    
   }
 
-process report {
-    publishDir "${params.outdir}/MultiQC", mode: 'copy'
-
-    input:
-    file (table) from ch_out
-    
-    output:
-    file "multiqc_report.html" into ch_multiqc_report
-
-    script:
-    """
-    cp -r ${params.report_dir}/* .
-    Rscript -e "rmarkdown::render('report.Rmd',params = list(res_table='$table'))"
-    mv report.html multiqc_report.html
-    """
-}
