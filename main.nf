@@ -40,7 +40,7 @@ ch_input_to_view.view()
 // ch_license = Channel.value(file(params.license))
 
 // Define Process
-process bgwrapper {
+process biograph {
     tag "$participant_id"
     publishDir "${params.outdir}/${participant_type}", mode: 'copy'
 
