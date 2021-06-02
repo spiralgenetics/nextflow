@@ -5,7 +5,7 @@ def helpMessage() {
     Usage:
     The typical command for running the pipeline is as follows:
     nextflow run main.nf --bams sample.bam [Options]
-    
+
     Inputs Options:
     --input         Input file
 
@@ -46,9 +46,9 @@ process biograph {
 
     input:
     set val(participant_id), val(participant_type), file(bam) from ch_input
-    set file(model) from ch_model
-    set file(reference_tar_gz) from ch_reference_tar_gz
-    set file(license) from ch_license
+    each file(model) from ch_model
+    each file(reference_tar_gz) from ch_reference_tar_gz
+    each file(license) from ch_license
 
     output:
     file "mock_${participant_id}.txt" into ch_out
@@ -70,6 +70,5 @@ process biograph {
     touch mock_${participant_id}.txt
     touch mock_${participant_id}.vcf
     """
-    
   }
 
