@@ -28,8 +28,8 @@ if (params.help) {
 
 // Define Channels from input
 Channel
-    .fromPath(params.input)
-    .ifEmpty { exit 1, "Cannot find input file : ${params.input}" }
+    .fromPath(params.input_tsv)
+    .ifEmpty { exit 1, "Cannot find input file : ${params.input_tsv}" }
     .splitCsv(skip:1, sep:'\t')
     .map { participant_id, participant_type, bam -> [ participant_id, participant_type, bam ] }
     .into { ch_input; ch_input_to_view }
