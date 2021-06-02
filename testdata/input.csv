@@ -1,2 +1,2 @@
-sample_name,file_path
-somename,somepath
+participant_id,participant_type,s3_path
+1234567789,control,somepath
