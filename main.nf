@@ -57,16 +57,16 @@ process biograph {
 
     script:
     """
-    # mkdir -p tmp
-    # tar xvfz $reference_tar_gz
+    mkdir -p tmp
+    echo tar xvfz $reference_tar_gz
     biograph license
     echo biograph full_pipeline --biograph ${participant_id}.bg --ref $reference_tar_gz.simpleName \
     --reads $bam \
-    --model $model \
+    --model /app/biograph_model.ml \
     --tmp ./tmp
-    mv ${participant_id}.bg/analysis/results.vcf ${participant_type}_${participant_id}.vcf
+    echo mv ${participant_id}.bg/analysis/results.vcf ${participant_type}_${participant_id}.vcf
 
-    ls -l /app/
+    ls -l
     echo "participant_id:" $participant_id
     echo "participant_type:" $participant_type
     touch mock_${participant_id}.txt
