@@ -35,7 +35,7 @@ Channel
     .into { ch_input; ch_input_to_view }
 
 ch_input_to_view.view()
-ch_model = Channel.value(file(params.model))
+// ch_model = Channel.value(file(params.model))
 ch_reference_tar_gz = Channel.value(file(params.reference_tar_gz))
 ch_license = Channel.value(file(params.license))
 
@@ -47,7 +47,7 @@ process biograph {
 
     input:
     set val(participant_id), val(participant_type), file(bam) from ch_input
-    each file(model) from ch_model
+//     each file(model) from ch_model
     each file(reference_tar_gz) from ch_reference_tar_gz
     each file(license) from ch_license
 
