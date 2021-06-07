@@ -7,7 +7,9 @@ def helpMessage() {
     nextflow run main.nf --bams sample.bam [Options]
 
     Inputs Options:
-    --input         Input file
+    --input_tsv         Input file
+    --license           License file
+    --reference_tar_gz  Reference.tar.gz ref dir file
 
     Resource Options:
     --max_cpus      Maximum number of CPUs (int)
@@ -58,13 +60,17 @@ process biograph {
     script:
     """
     mkdir -p tmp
-    echo tar xvfz $reference_tar_gz
+    tar xvfz $reference_tar_gz
     biograph license
-    echo biograph full_pipeline --biograph ${participant_id}.bg --ref $reference_tar_gz.simpleName \
+    biograph full_pipeline --biograph ${participant_id}.bg --ref $reference_tar_gz.simpleName \
     --reads $bam \
     --model /app/biograph_model.ml \
     --tmp ./tmp
-    echo mv ${participant_id}.bg/analysis/results.vcf ${participant_type}_${participant_id}.vcf
+    --create "--max-mem 100"
+    --discovery "--bed $reference_tar_gz.simpleName/regions_chr1p.bed" \
+    if [ -d ${participant_id}.bg ] && [ -f ${participant_id}.bg/analysis/results.vcf ]; then
+        mv ${participant_id}.bg/analysis/results.vcf ${participant_type}_${participant_id}.vcf
+    fi
 
     ls -l
     echo "participant_id:" $participant_id
