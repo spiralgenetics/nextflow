@@ -64,6 +64,7 @@ process biograph {
     biograph license
     biograph full_pipeline --biograph ${participant_id}.bg --ref $reference_tar_gz.simpleName \
     --reads $bam \
+    --format "bam" \
     --model /app/biograph_model.ml \
     --tmp ./tmp
     --create "--max-mem 100"
