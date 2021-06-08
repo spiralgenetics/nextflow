@@ -64,11 +64,11 @@ process biograph {
     biograph license
     biograph full_pipeline --biograph ${participant_id}.bg --ref $reference_tar_gz.simpleName \
     --reads $bam \
-    --format "bam" \
     --model /app/biograph_model.ml \
-    --tmp ./tmp
-    --create "--max-mem 100"
-    --discovery "--bed $reference_tar_gz.simpleName/regions_chr1p.bed" \
+    --tmp ./tmp \
+    --create "--max-mem 100 --format bam" \
+    --discovery "--bed $reference_tar_gz.simpleName/regions_chr1p.bed"
+    
     if [ -d ${participant_id}.bg ] && [ -f ${participant_id}.bg/analysis/results.vcf ]; then
         mv ${participant_id}.bg/analysis/results.vcf ${participant_type}_${participant_id}.vcf
     fi
