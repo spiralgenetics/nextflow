@@ -62,6 +62,7 @@ process biograph {
     mkdir -p tmp
     tar xvfz $reference_tar_gz
     biograph license
+    head ${bam} > mock_${participant_id}.txt
     samtools view ${bam} -s 0.1 > ten.percent.sam
     head -n2 ten.percent.sam
     biograph full_pipeline --biograph ${participant_id}.bg --ref $reference_tar_gz.simpleName \
