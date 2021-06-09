@@ -48,8 +48,7 @@ process biograph {
     beforeScript 'eval "$(aws ecr get-login --registry-ids 084957857030 --no-include-email --region eu-west-2)" && docker pull 084957857030.dkr.ecr.eu-west-2.amazonaws.com/releases:biograph-6.0.5'
 
     input:
-    set val(participant_id), val(participant_type), file(bam) from ch_input
-//     each file(model) from ch_model
+    set val(participant_id), val(participant_type), val(bam) from ch_input
     each file(reference_tar_gz) from ch_reference_tar_gz
     each file(license) from ch_license
 
@@ -62,11 +61,9 @@ process biograph {
     mkdir -p tmp
     tar xvfz $reference_tar_gz
     biograph license
-    head ${bam} > mock_${participant_id}.txt
-    samtools view ${bam} -s 0.1 > ten.percent.sam
-    head -n2 ten.percent.sam
+    aws s3 cp ${bam} | \
     biograph full_pipeline --biograph ${participant_id}.bg --ref $reference_tar_gz.simpleName \
-    --reads $bam \
+    --reads - \
     --model /app/biograph_model.ml \
     --tmp ./tmp \
     --create "--max-mem 100 --format bam" \
