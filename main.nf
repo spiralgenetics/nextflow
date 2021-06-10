@@ -33,11 +33,10 @@ Channel
     .fromPath(params.input_tsv)
     .ifEmpty { exit 1, "Cannot find input file : ${params.input_tsv}" }
     .splitCsv(skip:1, sep:'\t')
-    .map { participant_id, participant_type, bam -> [ participant_id, participant_type, bam ] }
+    .map { participant_id, participant_type, bam -> [ participant_id, participant_type, file(bam) ] }
     .into { ch_input; ch_input_to_view }
 
 ch_input_to_view.view()
-// ch_model = Channel.value(file(params.model))
 ch_reference_tar_gz = Channel.value(file(params.reference_tar_gz))
 ch_license = Channel.value(file(params.license))
 
@@ -48,7 +47,7 @@ process biograph {
     beforeScript 'eval "$(aws ecr get-login --registry-ids 084957857030 --no-include-email --region eu-west-2)" && docker pull 084957857030.dkr.ecr.eu-west-2.amazonaws.com/releases:biograph-6.0.5'
 
     input:
-    set val(participant_id), val(participant_type), val(bam) from ch_input
+    set val(participant_id), val(participant_type), file(bam) from ch_input
     each file(reference_tar_gz) from ch_reference_tar_gz
     each file(license) from ch_license
 
@@ -61,9 +60,8 @@ process biograph {
     mkdir -p tmp
     tar xvfz $reference_tar_gz
     biograph license
-    aws s3 cp ${bam} | \
     biograph full_pipeline --biograph ${participant_id}.bg --ref $reference_tar_gz.simpleName \
-    --reads - \
+    --reads $bam \
     --model /app/biograph_model.ml \
     --tmp ./tmp \
     --create "--max-mem 100 --format bam" \
