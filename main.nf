@@ -85,7 +85,7 @@ process biograph {
         fi
         if [ -d ${participant_id}.bg/qc ]; then
             for x in ${participant_id}.bg/qc/*; do
-                mv ${x} $(basename $x)-${participant_type}_${participant_id}.qc.txt
+                mv ${x} $(basename ${x})-${participant_type}_${participant_id}.qc.txt
             done 
        fi
     fi
