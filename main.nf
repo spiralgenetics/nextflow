@@ -54,7 +54,8 @@ process biograph {
     output:
     file "mock_${participant_id}.txt" into ch_out
     file "*.vcf"
-    file "*.qc.txt" into ch_qc_out
+    file "*.txt" into ch_qc_out
+    file "*.log"
 
     script:
     """
@@ -84,11 +85,8 @@ process biograph {
             mv ${participant_id}.bg/analysis/results.vcf ${participant_type}_${participant_id}.vcf
         fi
         if [ -d ${participant_id}.bg/qc ]; then
-            for x in ${participant_id}.bg/qc/*; do
-                basename_x=`basename ${x}`
-                mv ${x} ${basename_x}-${participant_type}_${participant_id}.qc.txt
-            done 
-       fi
+            cp -R ${participant_id}.bg/qc/* ./
+        fi
     fi
     """
   }
