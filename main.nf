@@ -53,8 +53,8 @@ process biograph {
 
     output:
     file "mock_${participant_id}.txt" into ch_out
-    file "*.qc.txt" into ch_out
     file "*.vcf"
+    file "*.qc.txt" into ch_qc_out
 
     script:
     """
