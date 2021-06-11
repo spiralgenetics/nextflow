@@ -52,8 +52,8 @@ process biograph {
     each file(license) from ch_license
 
     output:
-    file "mock_${participant_id}.txt" into ch_out
-    file "*.txt"
+    file "${participant_id}.bg/qc/create_log.txt" into ch_out
+    file "${participant_id}.bg/qc/*.txt"
 
     script:
     """
