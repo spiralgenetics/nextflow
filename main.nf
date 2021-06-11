@@ -53,13 +53,25 @@ process biograph {
 
     output:
     file "mock_${participant_id}.txt" into ch_out
+    file "*.qc.txt" into ch_out
     file "*.vcf"
 
     script:
     """
     mkdir -p tmp
     tar xvfz $reference_tar_gz
+    echo "Finished expanding tarball"
     biograph license
+
+    ls -l
+    echo "participant_id:" $participant_id
+    echo "participant_type:" $participant_type
+    touch mock_${participant_id}.txt
+    touch mock_${participant_id}.qc.txt
+    touch mock_${participant_id}.vcf
+    echo "Finished mock file touch"
+
+    echo "Starting BG full pipeline"
     biograph full_pipeline --biograph ${participant_id}.bg --ref $reference_tar_gz.simpleName \
     --reads $bam \
     --model /app/biograph_model.ml \
@@ -67,15 +79,16 @@ process biograph {
     --create "--max-mem 100 --format bam" \
     --discovery "--bed $reference_tar_gz.simpleName/regions_chr1p.bed"
     
-    if [ -d ${participant_id}.bg ] && [ -f ${participant_id}.bg/analysis/results.vcf ]; then
-        mv ${participant_id}.bg/analysis/results.vcf ${participant_type}_${participant_id}.vcf
+    if [ -d ${participant_id}.bg ]i; then
+        if [ -f ${participant_id}.bg/analysis/results.vcf ]; then
+            mv ${participant_id}.bg/analysis/results.vcf ${participant_type}_${participant_id}.vcf
+        fi
+        if [ -d ${participant_id}.bg/qc ]; then
+            for x in ${participant_id}.bg/qc/*; do
+                mv ${x} $(basename $x)-${participant_type}_${participant_id}.qc.txt
+            done 
+       fi
     fi
-
-    ls -l
-    echo "participant_id:" $participant_id
-    echo "participant_type:" $participant_type
-    touch mock_${participant_id}.txt
-    touch mock_${participant_id}.vcf
     """
   }
 
