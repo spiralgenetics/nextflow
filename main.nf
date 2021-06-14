@@ -39,6 +39,7 @@ Channel
 ch_input_to_view.view()
 ch_reference_tar_gz = Channel.value(file(params.reference_tar_gz))
 ch_license = Channel.value(file(params.license))
+ch_bedfile = Channel.value(file(params.bedfile))
 
 // Define Process
 process biograph {
@@ -50,6 +51,7 @@ process biograph {
     set val(participant_id), val(participant_type), file(bam) from ch_input
     each file(reference_tar_gz) from ch_reference_tar_gz
     each file(license) from ch_license
+    each file(bedfile) from ch_bedfile
 
     output:
     set file("${participant_id}.bg/qc/create_log.txt"),file("mock_${participant_id}.vcf"),file("*.log") into ch_out
@@ -76,7 +78,7 @@ process biograph {
     --tmp ./tmp \
     --threads ${task.cpus} \
     --create "--max-mem 100 --format bam" \
-    --discovery "--bed $reference_tar_gz.simpleName/regions_chr1p.bed" &> ${participant_id}_run.log
+    --discovery "--bed ${params.bedfile}" &> ${participant_id}_run.log
 
     # Copy the internal log file from it’s expected location
     echo "Check BG"
