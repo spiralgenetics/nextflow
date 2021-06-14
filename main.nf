@@ -54,7 +54,7 @@ process biograph {
     each file(bedfile) from ch_bedfile
 
     output:
-    set file("${participant_id}.bg/qc/create_log.txt"),file("mock_${participant_id}.vcf"),file("*.log") into ch_out
+    set file("${participant_id}.bg/qc/*"),file("mock_${participant_id}.vcf"),file("*.log") into ch_out
     file "*.txt"
 
     script:
@@ -97,7 +97,8 @@ process biograph {
         echo "Biograph succeeded!"
     fi	
     
-    if [ -d ${participant_id}.bg ]i; then
+    if [ -d ${participant_id}.bg ]; then
+        ls -lhtr ${participant_id}.bg/analysis
         if [ -f ${participant_id}.bg/analysis/results.vcf ]; then
             cp ${participant_id}.bg/analysis/results.vcf ${participant_type}_${participant_id}.vcf
         fi
