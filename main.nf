@@ -78,7 +78,7 @@ process biograph {
     --tmp ./tmp \
     --threads ${task.cpus} \
     --create "--max-mem 100 --format bam" \
-    --discovery "--bed ${params.bedfile}" &> ${participant_id}_run.log
+    --discovery "--bed ${bedfile}" &> ${participant_id}_run.log
 
     # Copy the internal log file from it’s expected location
     echo "Check BG"
