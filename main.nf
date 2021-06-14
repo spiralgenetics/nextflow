@@ -52,7 +52,7 @@ process biograph {
     each file(license) from ch_license
 
     output:
-    set file("${participant_id}.bg/qc/create_log.txt"),file("mock_${participant_id}.vcf") into ch_out
+    set file("${participant_id}.bg/qc/create_log.txt"),file("mock_${participant_id}.vcf"),file("*.log") into ch_out
     file "*.txt"
 
     script:
@@ -76,11 +76,28 @@ process biograph {
     --tmp ./tmp \
     --threads ${task.cpus} \
     --create "--max-mem 100 --format bam" \
-    --discovery "--bed $reference_tar_gz.simpleName/regions_chr1p.bed"
+    --discovery "--bed $reference_tar_gz.simpleName/regions_chr1p.bed" &> ${participant_id}_run.log
+
+    # Copy the internal log file from it’s expected location
+    echo "Check BG"
+    ls -l ${participant_id}.bg/
+    echo "Check QC folder"
+    ls -l ${participant_id}.bg/qc/
+
+    # Copy the internal log file from it’s expected location
+    cp ${participant_id}.bg/qc/create_log.txt  ${participant_id}.bg_qc_create_log.txt 
+    
+    # But has it failed?
+    if grep -q "${params.biograph_error_msg}"; then
+        echo "Biograph failed, exiting with exit status 1"
+            exit 1
+    else 
+        echo "Biograph succeeded!"
+    fi	
     
     if [ -d ${participant_id}.bg ]i; then
         if [ -f ${participant_id}.bg/analysis/results.vcf ]; then
-            mv ${participant_id}.bg/analysis/results.vcf ${participant_type}_${participant_id}.vcf
+            cp ${participant_id}.bg/analysis/results.vcf ${participant_type}_${participant_id}.vcf
         fi
         if [ -d ${participant_id}.bg/qc ]; then
             cp -R ${participant_id}.bg/qc/* ./
