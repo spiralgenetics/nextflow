@@ -54,8 +54,8 @@ process biograph {
     each file(bedfile) from ch_bedfile
 
     output:
-    set file("${participant_id}.bg/qc/*"),file("mock_${participant_id}.vcf"),file("*.log") into ch_out
-    file "*.txt"
+    set file("${participant_id}.bg/qc/*"),file("mock_${participant_id}.vcf") into ch_out
+    file "*.vcf.gz"
 
     script:
     """
@@ -100,10 +100,7 @@ process biograph {
     if [ -d ${participant_id}.bg ]; then
         ls -lhtr ${participant_id}.bg/analysis
         if [ -f ${participant_id}.bg/analysis/results.vcf ]; then
-            cp ${participant_id}.bg/analysis/results.vcf ${participant_type}_${participant_id}.vcf
-        fi
-        if [ -d ${participant_id}.bg/qc ]; then
-            cp -R ${participant_id}.bg/qc/* ./
+            cp ${participant_id}.bg/analysis/results.vcf.gz ${participant_type}_${participant_id}.vcf.gz
         fi
     fi
     """
