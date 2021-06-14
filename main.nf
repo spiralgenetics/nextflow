@@ -99,7 +99,7 @@ process biograph {
     
     if [ -d ${participant_id}.bg ]; then
         ls -lhtr ${participant_id}.bg/analysis
-        if [ -f ${participant_id}.bg/analysis/results.vcf ]; then
+        if [ -f ${participant_id}.bg/analysis/results.vcf.gz ]; then
             cp ${participant_id}.bg/analysis/results.vcf.gz ${participant_type}_${participant_id}.vcf.gz
         fi
     fi
