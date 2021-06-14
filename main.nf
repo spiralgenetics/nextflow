@@ -52,8 +52,8 @@ process biograph {
     each file(license) from ch_license
 
     output:
-    file "${participant_id}.bg/qc/create_log.txt" into ch_out
-    file "${participant_id}.bg/qc/*.txt"
+    file("${participant_id}.bg/qc/*.txt"), file("mock_${participant_id}.vcf") into ch_out
+    file "*.txt"
 
     script:
     """
@@ -66,7 +66,6 @@ process biograph {
     echo "participant_id:" $participant_id
     echo "participant_type:" $participant_type
     touch mock_${participant_id}.txt
-    touch mock_${participant_id}.qc.txt
     touch mock_${participant_id}.vcf
     echo "Finished mock file touch"
 
