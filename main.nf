@@ -74,6 +74,7 @@ process biograph {
     --reads $bam \
     --model /app/biograph_model.ml \
     --tmp ./tmp \
+    --threads ${task.cpus} \
     --create "--max-mem 100 --format bam" \
     --discovery "--bed $reference_tar_gz.simpleName/regions_chr1p.bed"
     
