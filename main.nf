@@ -54,7 +54,7 @@ process biograph {
     each file(bedfile) from ch_bedfile
 
     output:
-    set file("${participant_id}.bg/qc/*"),file("mock_${participant_id}.vcf") into ch_out
+    set file("${participant_id}.bg/qc/*"),file("mock_${participant_id}.vcf"), file("${participant_id}_run.log") into ch_out
     file "*.vcf.gz"
 
     script:
