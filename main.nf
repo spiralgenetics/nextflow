@@ -74,11 +74,6 @@ process biograph {
     touch mock_${participant_id}.vcf
     echo "Finished mock file touch"
 
-    mkdir -p ${participant_id}.bg/
-    mkdir -p ${participant_id}.bg/qc/
-    touch ${participant_id}.bg/qc/create_log.txt
-
-
     echo "Starting BG full pipeline"
     echo biograph full_pipeline --biograph ${participant_id}.bg --ref $reference_tar_gz.simpleName \
     --reads $bam \
@@ -94,7 +89,7 @@ process biograph {
     ls -l ${participant_id}.bg/
 
     # Copy the internal log file from it’s expected location
-    cp ${participant_id}.bg/qc/create_log.txt  ${participant_id}.bg_qc_create_log.txt 
+    # cp ${participant_id}.bg/qc/create_log.txt  ${participant_id}.bg_qc_create_log.txt 
     
     # But has it failed?
     if grep -q "${params.biograph_error_msg}"; then
