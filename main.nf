@@ -81,14 +81,14 @@ process biograph {
 
     echo "Starting BG full pipeline"
     tail -f ${participant_id}.bg/qc/create_log.txt &
-    biograph full_pipeline --biograph ${participant_id}.bg --ref $reference_tar_gz.simpleName \
+    echo biograph full_pipeline --biograph ${participant_id}.bg --ref $reference_tar_gz.simpleName \
     --reads $bam \
     --model /app/biograph_model.ml \
     --tmp ./tmp \
     --threads ${params.biograph_cpus} \
     --create "--max-mem 100 --format bam" \
     --discovery "${regions_bed}" \
-    --force | tee ${participant_id}_run.log
+    --force &>> ${participant_id}.bg/qc/create_log.txt
 
     # Copy the internal log file from it’s expected location
     echo "Check BG"
@@ -114,6 +114,7 @@ process biograph {
             cp ${participant_id}.bg/analysis/results.vcf.gz ${participant_type}_${participant_id}.vcf.gz
         fi
     fi
+    exit 0
     """
   }
 
