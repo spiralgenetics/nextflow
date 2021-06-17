@@ -79,7 +79,7 @@ process biograph {
     --reads $bam \
     --model /app/biograph_model.ml \
     --tmp ./tmp \
-    --threads ${params.biograph_cpus} \
+    --threads ${task.cpus} \
     --create "--max-mem 100 --format bam" \
     --discovery "${regions_bed}" \
     --force
