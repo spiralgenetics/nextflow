@@ -54,10 +54,11 @@ process biograph {
     each file(bedfile) from ch_bedfile
 
     output:
-    set file("${participant_id}.bg/qc/*"),file("mock_${participant_id}.vcf"), file("${participant_id}_run.log") into ch_out
+    set file("${participant_id}.bg/qc/*"),file("mock_${participant_id}.*"), file("${participant_id}_run.log") into ch_out
     file "*.vcf.gz"
 
     script:
+    def regions_bed = bedfile.name != 'false' ? "--bed $bedfile" : ''
     """
     mkdir -p tmp
     if [ ! -d $reference_tar_gz.simpleName ]; then
@@ -86,7 +87,7 @@ process biograph {
     --tmp ./tmp \
     --threads ${params.biograph_cpus} \
     --create "--max-mem 100 --format bam" \
-    --discovery "--bed ${bedfile}" \
+    --discovery "${regions_bed}" \
     --force | tee ${participant_id}_run.log
 
     # Copy the internal log file from it’s expected location
