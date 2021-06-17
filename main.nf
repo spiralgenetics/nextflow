@@ -58,7 +58,7 @@ process biograph {
     file "*.vcf.gz"
 
     script:
-    def regions_bed = bedfile.name != 'false' ? "--bed $bedfile" : ''
+    def regions_bed = bedfile.name != 'NO_FILE' ? "--bed $bedfile" : ''
     """
     mkdir -p tmp
     if [ ! -d $reference_tar_gz.simpleName ]; then
