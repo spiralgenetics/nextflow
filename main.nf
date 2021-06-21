@@ -81,8 +81,7 @@ process biograph {
     --tmp ./tmp \
     --threads ${task.cpus} \
     --create "--max-mem 100 --format bam" \
-    --discovery "${regions_bed}" \
-    --force
+    --discovery "${regions_bed}"
 
     # Copy the internal log file from it’s expected location
     echo "Check BG"
