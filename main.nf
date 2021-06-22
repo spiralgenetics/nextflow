@@ -65,7 +65,7 @@ process biograph {
         tar xvfz $reference_tar_gz
     fi
     echo "Finished expanding tarball"
-    biograph license
+    biograph license 2> mock_${participant_id}.txt
 
     ls -l
     echo "participant_id:" $participant_id
@@ -74,26 +74,29 @@ process biograph {
     touch mock_${participant_id}.vcf
     echo "Finished mock file touch"
 
-    echo "Starting BG full pipeline"
-    biograph full_pipeline --biograph ${participant_id}.bg --ref $reference_tar_gz.simpleName \
-    --reads $bam \
-    --model /app/biograph_model.ml \
-    --tmp ./tmp \
-    --threads ${task.cpus} \
-    --create "--max-mem 100 --format bam" \
-    --discovery "${regions_bed}"
+    #echo "Starting BG full pipeline"
+    # biograph full_pipeline --biograph ${participant_id}.bg --ref $reference_tar_gz.simpleName \
+    # --reads $bam \
+    # --model /app/biograph_model.ml \
+    #--tmp ./tmp \
+    #--threads ${task.cpus} \
+    #--start create \
+    #--end discovery \
+    #--create "--max-mem 100 --format bam" \
+    #--discovery "${regions_bed}"
 
-    # Copy the internal log file from it’s expected location
-    echo "Check BG"
-    ls -l ${participant_id}.bg/
-
-    # Copy the internal log file from it’s expected location
-    # cp ${participant_id}.bg/qc/create_log.txt  ${participant_id}.bg_qc_create_log.txt 
+    if [ -d ${participant_id}.bg ]; then
+        # Copy the internal log file from it’s expected location
+        echo "Check BG"
+        ls -l ${participant_id}.bg/
+        # Copy the internal log file from it’s expected location
+        # cp ${participant_id}.bg/qc/create_log.txt  ${participant_id}.bg_qc_create_log.txt 
+    fi
     
     # But has it failed?
     if grep -q "${params.biograph_error_msg}"; then
         echo "Biograph failed, exiting with exit status 1"
-            exit 1
+        exit 1
     else 
         echo "Biograph succeeded!"
     fi	
@@ -107,7 +110,7 @@ process biograph {
             cp ${participant_id}.bg/analysis/results.vcf.gz ${participant_type}_${participant_id}.vcf.gz
         fi
     fi
-    exit 0
+    echo "Complete."
     """
   }
 
