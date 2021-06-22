@@ -73,15 +73,15 @@ process biograph {
     echo "Finished mock file touch"
 
     #echo "Starting BG full pipeline"
-    # biograph full_pipeline --biograph ${participant_id}.bg --ref $reference_tar_gz.simpleName \
-    # --reads $bam \
-    # --model /app/biograph_model.ml \
-    #--tmp ./tmp \
-    #--threads ${task.cpus} \
-    #--start create \
-    #--end discovery \
-    #--create "--max-mem 100 --format bam" \
-    #--discovery "${regions_bed}"
+    biograph full_pipeline --biograph ${participant_id}.bg --ref $reference_tar_gz.simpleName \
+    --reads $bam \
+    --model /app/biograph_model.ml \
+    --tmp ./tmp \
+    --threads ${task.cpus} \
+    --start create \
+    --end discovery \
+    --create "--max-mem 100 --format bam" \
+    --discovery "${regions_bed}"
 
     if [ -d ${participant_id}.bg ]; then
         # Copy the internal log file from it’s expected location
