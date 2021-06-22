@@ -52,7 +52,7 @@ process biograph {
     each file(license) from ch_license
 
     output:
-    set file("${participant_id}.bg/qc/*"),file("mock_${participant_id}.*"), file("${participant_id}_run.log") into ch_out
+    set file("${participant_id}.bg/qc/*"), file("mock_${participant_id}.*"), file("*.txt") into ch_out
     file "*.vcf.gz"
 
     script:
@@ -78,8 +78,8 @@ process biograph {
     --model /app/biograph_model.ml \
     --tmp ./tmp \
     --threads ${task.cpus} \
-    --resume create \
-    --stop discovery \
+    # --resume create \
+    # --stop discovery \
     --create "--max-mem 100 --format bam" \
     --discovery "${regions_bed}"
 
