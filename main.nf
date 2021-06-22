@@ -78,8 +78,8 @@ process biograph {
     --model /app/biograph_model.ml \
     --tmp ./tmp \
     --threads ${task.cpus} \
-    --start create \
-    --end discovery \
+    --resume create \
+    --stop discovery \
     --create "--max-mem 100 --format bam" \
     --discovery "${regions_bed}"
 
