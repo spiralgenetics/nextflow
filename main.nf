@@ -39,7 +39,6 @@ Channel
 ch_input_to_view.view()
 ch_reference_tar_gz = Channel.value(file(params.reference_tar_gz))
 ch_license = Channel.value(file(params.license))
-ch_bedfile = Channel.value(params.bedfile)
 
 // Define Process
 process biograph {
@@ -51,14 +50,13 @@ process biograph {
     set val(participant_id), val(participant_type), file(bam) from ch_input
     each file(reference_tar_gz) from ch_reference_tar_gz
     each file(license) from ch_license
-    each val(bedfile) from ch_bedfile
 
     output:
     set file("${participant_id}.bg/qc/*"),file("mock_${participant_id}.*"), file("${participant_id}_run.log") into ch_out
     file "*.vcf.gz"
 
     script:
-    def regions_bed = bedfile != 'NO_FILE' ? "--bed $reference_tar_gz.simpleName/$bedfile" : ''
+    def regions_bed = params.bedfile != 'NO_FILE' ? "--bed $reference_tar_gz.simpleName/${params.bedfile}" : ''
     """
     mkdir -p tmp
     if [ ! -d $reference_tar_gz.simpleName ]; then
