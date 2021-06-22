@@ -39,7 +39,7 @@ Channel
 ch_input_to_view.view()
 ch_reference_tar_gz = Channel.value(file(params.reference_tar_gz))
 ch_license = Channel.value(file(params.license))
-ch_bedfile = Channel.value(file(params.bedfile))
+ch_bedfile = Channel.value(params.bedfile)
 
 // Define Process
 process biograph {
