@@ -51,21 +51,21 @@ process biograph {
     set val(participant_id), val(participant_type), file(bam) from ch_input
     each file(reference_tar_gz) from ch_reference_tar_gz
     each file(license) from ch_license
-    each file(bedfile) from ch_bedfile
+    each val(bedfile) from ch_bedfile
 
     output:
     set file("${participant_id}.bg/qc/*"),file("mock_${participant_id}.*"), file("${participant_id}_run.log") into ch_out
     file "*.vcf.gz"
 
     script:
-    def regions_bed = bedfile.name != 'NO_FILE' ? "--bed $bedfile" : ''
+    def regions_bed = bedfile != 'NO_FILE' ? "--bed $reference_tar_gz.simpleName/$bedfile" : ''
     """
     mkdir -p tmp
     if [ ! -d $reference_tar_gz.simpleName ]; then
         tar xvfz $reference_tar_gz
     fi
     echo "Finished expanding tarball"
-    biograph license 2> mock_${participant_id}.txt
+    biograph license
 
     ls -l
     echo "participant_id:" $participant_id
