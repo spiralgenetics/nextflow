@@ -58,7 +58,7 @@ process biograph {
     script:
     def regions_bed = params.bedfile != 'NO_FILE' ? "--bed $reference_tar_gz.simpleName/${params.bedfile}" : ''
     """
-    function log() { echo `date` $*; }
+    function log() { echo `date` ${*}; }
     mkdir -p tmp
     log "Start reference unzip"
     if [ ! -d $reference_tar_gz.simpleName ]; then
