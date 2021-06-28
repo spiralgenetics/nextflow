@@ -58,23 +58,22 @@ process biograph {
     script:
     def regions_bed = params.bedfile != 'NO_FILE' ? "--bed $reference_tar_gz.simpleName/${params.bedfile}" : ''
     """
-    function log() { echo `date` ${*}; }
     mkdir -p tmp
-    log "Start reference unzip"
+    echo `date` "Start reference unzip"
     if [ ! -d $reference_tar_gz.simpleName ]; then
         tar xvfz $reference_tar_gz
     fi
-    log "Finished expanding tarball"
+    echo `date` "Finished expanding tarball"
     biograph license
 
     ls -l
-    log "participant_id:" $participant_id
-    log "participant_type:" $participant_type
+    echo `date` "participant_id:" $participant_id
+    echo `date` "participant_type:" $participant_type
     touch mock_${participant_id}.txt
     touch mock_${participant_id}.vcf
-    log "Finished mock file touch"
+    echo `date` "Finished mock file touch"
 
-    log "Starting BG full pipeline"
+    echo `date` "Starting BG full pipeline"
     biograph full_pipeline --biograph ${participant_id}.bg --ref $reference_tar_gz.simpleName \
     --reads $bam \
     --model /app/biograph_model.ml \
@@ -85,7 +84,7 @@ process biograph {
 
     if [ -d ${participant_id}.bg ]; then
         # Copy the internal log file from it’s expected location
-        log "Check BG"
+        echo `date` "Check BG"
         ls -l ${participant_id}.bg/
         # Copy the internal log file from it’s expected location
         # cp ${participant_id}.bg/qc/create_log.txt  ${participant_id}.bg_qc_create_log.txt 
@@ -93,7 +92,7 @@ process biograph {
     
     # But has it failed?
     if grep -q "${params.biograph_error_msg}"; then
-        log "Biograph failed, exiting with exit status 1"
+        echo `date` "Biograph failed, exiting with exit status 1"
         exit 1
     else 
         echo "Biograph succeeded!"
@@ -101,14 +100,14 @@ process biograph {
     
     if [ -d ${participant_id}.bg ]; then
         ls -lhtr ${participant_id}.bg/analysis
-        log "Check QC folder"
+        echo `date` "Check QC folder"
         ls -l ${participant_id}.bg/qc/
 
         if [ -f ${participant_id}.bg/analysis/results.vcf.gz ]; then
             cp ${participant_id}.bg/analysis/results.vcf.gz ${participant_type}_${participant_id}.vcf.gz
         fi
     fi
-    log "Complete."
+    echo `date` "Complete."
     """
   }
 
