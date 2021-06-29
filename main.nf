@@ -52,8 +52,8 @@ process biograph {
     each file(license) from ch_license
 
     output:
-    set file("${participant_id}.bg/qc/*"), file("mock_${participant_id}.*"), file("*.txt") into ch_out
-    file "*.vcf.gz"
+    set file("${participant_id}.bg/*"), file("mock_${participant_id}.*"), file("*.txt") into ch_out
+    file "*.vcf.gz" into ch_out_vcf
 
     script:
     def regions_bed = params.bedfile != 'NO_FILE' ? "--bed $reference_tar_gz.simpleName/${params.bedfile}" : ''
@@ -111,3 +111,17 @@ process biograph {
     """
   }
 
+process list_files {
+    tag "$participant_id"
+    beforeScript 'eval "$(aws ecr get-login --registry-ids 084957857030 --no-include-email --region eu-west-2)" && docker pull 084957857030.dkr.ecr.eu-west-2.amazonaws.com/releases:biograph-6.0.5'
+
+    input:
+    set file(biograph_folder), file(mock_files), file(text_files) from ch_out.collect()
+    file(vcf_files) from ch_out_vcf
+
+    script:
+    """
+    ls -l
+    cat ${biograph_folder}/qc/create_log.txt
+    echo `date` "Complete."
+    """
