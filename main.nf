@@ -58,6 +58,13 @@ process biograph {
     script:
     def regions_bed = params.bedfile != 'NO_FILE' ? "--bed $reference_tar_gz.simpleName/${params.bedfile}" : ''
     """
+    ls -l
+    echo `date` "participant_id:" $participant_id
+    echo `date` "participant_type:" $participant_type
+    touch mock_${participant_id}.txt
+    touch mock_${participant_id}.vcf
+    echo `date` "Finished mock file touch"
+
     mkdir -p tmp
     echo `date` "Start reference unzip"
     if [ ! -d $reference_tar_gz.simpleName ]; then
@@ -65,13 +72,6 @@ process biograph {
     fi
     echo `date` "Finished expanding tarball"
     biograph license
-
-    ls -l
-    echo `date` "participant_id:" $participant_id
-    echo `date` "participant_type:" $participant_type
-    touch mock_${participant_id}.txt
-    touch mock_${participant_id}.vcf
-    echo `date` "Finished mock file touch"
 
     echo `date` "Starting BG full pipeline"
     biograph full_pipeline --biograph ${participant_id}.bg --ref $reference_tar_gz.simpleName \
