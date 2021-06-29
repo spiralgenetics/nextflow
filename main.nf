@@ -62,7 +62,8 @@ process biograph {
     echo `date` "participant_id:" $participant_id
     echo `date` "participant_type:" $participant_type
     touch mock_${participant_id}.txt
-    touch mock_${participant_id}.vcf
+    touch mock_${participant_id}.vcf.gz
+    touch test_${participant_id}.vcf.gz
     echo `date` "Finished mock file touch"
 
     mkdir -p tmp
@@ -108,7 +109,7 @@ process biograph {
             cp ${participant_id}.bg/analysis/results.vcf.gz ${participant_type}_${participant_id}.vcf.gz
         fi
     fi
-    echo `date` "Complete."
+    echo `date` "Process: BioGraph - Complete."
     """
   }
 
@@ -122,6 +123,6 @@ process list_files {
     script:
     """
     ls -l
-    echo `date` "Complete."
+    echo `date` "Process: List_Files - Complete."
     """
 }
