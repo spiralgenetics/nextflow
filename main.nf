@@ -122,7 +122,6 @@ process list_files {
     script:
     """
     ls -l
-    cat ${biograph_folder}/qc/create_log.txt
     echo `date` "Complete."
     """
 }
