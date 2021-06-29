@@ -81,7 +81,6 @@ process biograph {
     --tmp ./tmp \
     --threads ${task.cpus} \
     --create "--max-mem 100 --format bam" \
-    --stop create \
     --discovery "${regions_bed}"
 
     if [ -d ${participant_id}.bg ]; then
@@ -122,6 +121,9 @@ process list_files {
 
     script:
     """
+    ls -l
+    mkdir -p mock
+    mv ${mock_files} mock/
     ls -l
     echo `date` "Process: List_Files - Complete."
     """
