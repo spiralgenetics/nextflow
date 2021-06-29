@@ -125,3 +125,4 @@ process list_files {
     cat ${biograph_folder}/qc/create_log.txt
     echo `date` "Complete."
     """
+}
