@@ -112,19 +112,3 @@ process biograph {
     """
   }
 
-process list_files {
-    tag "$participant_id-mock"
-    beforeScript 'eval "$(aws ecr get-login --registry-ids 084957857030 --no-include-email --region eu-west-2)" && docker pull 084957857030.dkr.ecr.eu-west-2.amazonaws.com/releases:biograph-6.0.5'
-
-    input:
-    file(mock_files) from ch_mock.collect()
-
-    script:
-    """
-    ls -l
-    mkdir -p mock
-    echo `date` ${mock_files}
-    ls -l
-    echo `date` "Process: List_Files - Complete."
-    """
-}
