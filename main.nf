@@ -83,6 +83,9 @@ process biograph {
     --create "--max-mem ${task.memory} --format bam" \
     --discovery "${regions_bed}"
     
+    echo `date` "Run BioGraph Stats"
+    biograph stats -b ${participant_id}.bg -r $reference_tar_gz.simpleName/
+
     # But has it failed?
     if grep -q "${params.biograph_error_msg}"; then
         echo `date` "Biograph failed, exiting with exit status 1"
