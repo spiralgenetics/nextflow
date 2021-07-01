@@ -82,14 +82,6 @@ process biograph {
     --threads ${task.cpus} \
     --create "--max-mem ${task.memory} --format bam" \
     --discovery "${regions_bed}"
-
-    if [ -d ${participant_id}.bg ]; then
-        # Copy the internal log file from it’s expected location
-        echo `date` "Check BG"
-        ls -l ${participant_id}.bg/
-        # Copy the internal log file from it’s expected location
-        # cp ${participant_id}.bg/qc/create_log.txt  ${participant_id}.bg_qc_create_log.txt 
-    fi
     
     # But has it failed?
     if grep -q "${params.biograph_error_msg}"; then
@@ -100,6 +92,9 @@ process biograph {
     fi	
     
     if [ -d ${participant_id}.bg ]; then
+        echo `date` "Check BG"
+        ls -l ${participant_id}.bg/
+        echo `date` "Check analysis folder"
         ls -lhtr ${participant_id}.bg/analysis
         echo `date` "Check QC folder"
         ls -l ${participant_id}.bg/qc/
