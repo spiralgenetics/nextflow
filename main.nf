@@ -80,7 +80,7 @@ process biograph {
     --model /app/biograph_model.ml \
     --tmp ./tmp \
     --threads ${task.cpus} \
-    --create "--max-mem ${$task.memory} --format bam" \
+    --create "--max-mem ${task.memory} --format bam" \
     --discovery "${regions_bed}"
 
     if [ -d ${participant_id}.bg ]; then
