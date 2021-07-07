@@ -52,7 +52,7 @@ process biograph {
     each file(license) from ch_license
 
     output:
-    set file("${participant_id}.bg/qc/*"), file("*.txt"), file("*.vcf.gz") into ch_out
+    set file("*.txt"), file("*.vcf.gz"), file("${participant_id}.bg/qc/*") into ch_out
     file("mock_${participant_id}.*") into ch_mock
 
     script:
