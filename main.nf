@@ -80,12 +80,9 @@ process biograph {
     --model /app/biograph_model.ml \
     --tmp ./tmp \
     --threads ${task.cpus} \
-    --create "--max-mem ${task.memory} --format bam" \
+    --create "--max-mem ${task.memory%.**} --format bam" \
     --discovery "${regions_bed}"
     
-    echo `date` "Run BioGraph Stats"
-    biograph stats -b ${participant_id}.bg -r $reference_tar_gz.simpleName/
-
     # But has it failed?
     if grep -q "${params.biograph_error_msg}"; then
         echo `date` "Biograph failed, exiting with exit status 1"
@@ -95,6 +92,10 @@ process biograph {
     fi	
     
     if [ -d ${participant_id}.bg ]; then
+
+        echo `date` "Run BioGraph Stats"
+        biograph stats -b ${participant_id}.bg -r $reference_tar_gz.simpleName/
+
         echo `date` "Check BG"
         ls -l ${participant_id}.bg/
         echo `date` "Check analysis folder"
