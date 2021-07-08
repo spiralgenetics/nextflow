@@ -81,7 +81,7 @@ process biograph {
     --model /app/biograph_model.ml \
     --tmp ./tmp \
     --threads ${task.cpus} \
-    --create "--max-mem ${bgmem%.**} --format bam" \
+    --create "--max-mem ${bgmem.simpleName} --format bam" \
     --discovery "${regions_bed}"
     
     # But has it failed?
