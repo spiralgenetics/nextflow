@@ -65,6 +65,7 @@ process biograph {
     touch mock_${participant_id}.vcf.gz
     touch test_${participant_id}.vcf.gz
     echo `date` "Finished mock file touch"
+    bgmem=${task.memory}
 
     mkdir -p tmp
     echo `date` "Start reference unzip"
@@ -80,7 +81,7 @@ process biograph {
     --model /app/biograph_model.ml \
     --tmp ./tmp \
     --threads ${task.cpus} \
-    --create "--max-mem ${task.memory%.**} --format bam" \
+    --create "--max-mem ${bgmem%.**} --format bam" \
     --discovery "${regions_bed}"
     
     # But has it failed?
