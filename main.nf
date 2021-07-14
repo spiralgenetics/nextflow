@@ -33,7 +33,7 @@ Channel
     .fromPath(params.input_tsv)
     .ifEmpty { exit 1, "Cannot find input file : ${params.input_tsv}" }
     .splitCsv(skip:1, sep:'\t')
-    .map { participant_id, participant_type, bam -> [ participant_id, participant_type, file(bam) ] }
+    .map { participant_id, participant_type, bam -> [ participant_id, participant_type, bam ] }
     .into { ch_input; ch_input_to_view }
 
 ch_input_to_view.view()
@@ -75,8 +75,7 @@ process biograph {
     biograph license
 
     echo `date` "Starting BG full pipeline"
-    biograph full_pipeline --biograph ${participant_id}.bg --ref $reference_tar_gz.simpleName \
-    --reads $bam \
+    aws s3 cp --only-show-errors ${bam} - | biograph full_pipeline --biograph ${participant_id}.bg --ref $reference_tar_gz.simpleName \
     --model /app/biograph_model.ml \
     --tmp ./tmp \
     --threads ${task.cpus} \
