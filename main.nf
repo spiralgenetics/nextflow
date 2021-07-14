@@ -76,6 +76,7 @@ process biograph {
 
     echo `date` "Starting BG full pipeline"
     aws s3 cp --only-show-errors --no-verify-ssl ${bam} - | biograph full_pipeline --biograph ${participant_id}.bg --ref $reference_tar_gz.simpleName \
+    --reads - \
     --model /app/biograph_model.ml \
     --tmp ./tmp \
     --threads ${task.cpus} \
