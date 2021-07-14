@@ -75,8 +75,7 @@ process biograph {
     biograph license
 
     echo `date` "Starting BG full pipeline"
-    echo aws s3 cp --only-show-errors ${bam} - 
-    echo biograph full_pipeline --biograph ${participant_id}.bg --ref $reference_tar_gz.simpleName \
+    aws s3 cp --only-show-errors ${bam} - | biograph full_pipeline --biograph ${participant_id}.bg --ref $reference_tar_gz.simpleName \
     --model /app/biograph_model.ml \
     --tmp ./tmp \
     --threads ${task.cpus} \
