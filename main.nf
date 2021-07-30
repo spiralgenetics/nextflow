@@ -42,10 +42,10 @@ ch_license = Channel.value(file(params.license))
 
 // Define Process
 process step_1 {
-    tag "$participant_id_step1"
+    tag "step1"
     script:
     """
-    echo `date` "${participant_id}:${participant_type}"
+    echo `date`
     """
 }
 
