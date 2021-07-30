@@ -41,6 +41,14 @@ ch_reference_tar_gz = Channel.value(file(params.reference_tar_gz))
 ch_license = Channel.value(file(params.license))
 
 // Define Process
+process step_1 {
+    tag "$participant_id_step1"
+    script:
+    """
+    echo `date` "${participant_id}:${participant_type}"
+    """
+}
+
 process biograph {
     tag "$participant_id"
     publishDir "${params.outdir}/${participant_type}", mode: 'copy'
