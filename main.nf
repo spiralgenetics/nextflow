@@ -8,7 +8,6 @@ def helpMessage() {
 
     Inputs Options:
     --input_tsv         Input file
-    --license           License file
     --reference_tar_gz  Reference.tar.gz ref dir file
 
     Resource Options:
@@ -38,7 +37,6 @@ Channel
 
 ch_input_to_view.view()
 ch_reference_tar_gz = Channel.value(file(params.reference_tar_gz))
-ch_license = Channel.value(file(params.license))
 
 // Define Process
 process step_1 {
@@ -57,7 +55,6 @@ process biograph {
     input:
     set val(participant_id), val(participant_type), val(bam) from ch_input
     each file(reference_tar_gz) from ch_reference_tar_gz
-    each file(license) from ch_license
 
     output:
     set file("*.txt"), file("*.vcf.gz"), file("${participant_id}.bg/qc/*") into ch_out
@@ -80,7 +77,6 @@ process biograph {
         tar xvfz $reference_tar_gz
     fi
     echo `date` "Finished expanding tarball"
-    biograph license
 
     echo `date` "Starting BG full pipeline"
     aws s3 cp --only-show-errors --no-verify-ssl ${bam} - | biograph full_pipeline --biograph ${participant_id}.bg --ref $reference_tar_gz.simpleName \
