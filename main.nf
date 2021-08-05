@@ -61,7 +61,7 @@ process biograph {
     file("mock_${participant_id}.*") into ch_mock
 
     script:
-    def regions_bed = params.bedfile != 'NO_FILE' ? "--bed $reference_tar_gz.simpleName/${params.bedfile}" : ''
+    regions_bed = params.bedfile != 'NO_FILE' ? "--bed $reference_tar_gz.simpleName/${params.bedfile}" : ''
     """
     ls -l
     echo `date` "participant_id:" $participant_id
