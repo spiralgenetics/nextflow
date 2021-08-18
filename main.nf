@@ -50,7 +50,7 @@ process step_1 {
 process biograph {
     tag "$participant_id"
     publishDir "${params.outdir}/${participant_type}", mode: 'copy'
-    beforeScript 'eval "$(aws ecr get-login --registry-ids 084957857030 --no-include-email --region eu-west-2)" && docker pull 084957857030.dkr.ecr.eu-west-2.amazonaws.com/releases:biograph-7.0.0'
+    beforeScript 'eval docker pull spiralgenetics/biograph:biograph-7.0.0'
 
     input:
     set val(participant_id), val(participant_type), val(bam) from ch_input
